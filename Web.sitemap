@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<siteMap xmlns="http://schemas.microsoft.com/AspNet/SiteMap-File-1.0" >
+  <siteMapNode url="" title="Root"  description="">
+    <siteMapNode url="default.aspx" title="Home"  description="" />
+    <siteMapNode url="admin\default.aspx" title="Admin"  description="Homepage for the Administration Department"  />
+    <siteMapNode url="hr\default.aspx" title="HR"  description="Homepage for the Human Resources Department" />
+    <siteMapNode url="it\default.aspx" title="IT"  description="Homepage for the Information Technology Department" />
+    <siteMapNode url="marketing\default.aspx" title="Marketing"  description="Homepage for the Marketing Department" />
+    <siteMapNode url="sales\default.aspx" title="Sales"  description="Homepage for the Sales Department" />
+    <siteMapNode url="physics\default.aspx" title="Physics"  description="Homepage for the Physics Department" />
+    <siteMapNode url="pm\default.aspx" title="PM"  description="Homepage for the Project Management Department">            
+      <siteMapNode url="pm\takeoff\default.aspx" title="Takeoffs"  description="Takeoffs" />      
+    </siteMapNode>
+    <siteMapNode url="apps\default.aspx" title ="Applications" description="Veritas Web Applications" >
+      <siteMapNode url="apps\reports\default.aspx" title="Reports"  description="Veritas Reports" />
+      <siteMapNode url="apps\calllog\default.aspx" title="Call Log"  description="Call logging" />
+      <siteMapNode url="apps\documents\default.aspx" title="Documents"  description="Veritas Document Repository" />
+      <siteMapNode url="apps\projects\default.aspx" title="Projects"  description="Project Information" />
+      <siteMapNode url="apps\rfi\rfiView.aspx" title="RFIs"  description="RFIs" />
+      <siteMapNode url="apps\work\default.aspx" title="Work Tracking"  description="Project Work Tracking" />
+      <siteMapNode url="apps\estimating\default.aspx" title="Estimate Tracking"  description="Estimate Tracking" />
+    </siteMapNode>
+    <!--<siteMapNode url="production\prod.aspx" title="Production"  description="" />
+    <siteMapNode url="shipping\ship.aspx" title="Shipping"  description="" />-->
+  </siteMapNode>
+</siteMap>

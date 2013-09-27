@@ -1,0 +1,26 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+
+public partial class _controls_projectFilter : System.Web.UI.UserControl
+{
+    protected void Page_Load(object sender, EventArgs e)
+    {
+
+    }
+
+    #region CONTROL EVENTS
+
+    protected void ddlProject_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        int id = int.Parse(ddlProject.SelectedItem.Value.ToString());
+        
+        // bubble event here to be handled and call LoadForm() on parent page
+        //LoadForm(id);
+    }
+
+    #endregion
+}
