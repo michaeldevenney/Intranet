@@ -1,7 +1,7 @@
-﻿<%@ Page Title="Project Details" Language="C#" MasterPageFile="~/MasterPage.master" AutoEventWireup="true"
-    CodeFile="Default.aspx.cs" Inherits="apps_projects_Default" %>
-    <%--<%@ Register TagPrefix="ver" TagName="projectFilter" Src="~/_controls/projectFilter.ascx" %>--%>
+﻿<%@ Page Title="Project Details" Language="C#" MasterPageFile="~/MasterPage.master"
+    AutoEventWireup="true" CodeFile="Default.aspx.cs" Inherits="apps_projects_Default" %>
 
+<%--<%@ Register TagPrefix="ver" TagName="projectFilter" Src="~/_controls/projectFilter.ascx" %>--%>
 <asp:Content ID="Content1" ContentPlaceHolderID="titleContent" runat="Server">
 </asp:Content>
 <asp:Content ID="Content2" ContentPlaceHolderID="headContent" runat="Server">
@@ -26,8 +26,10 @@
                         </asp:DropDownList>
                     </asp:TableCell>
                     <asp:TableCell></asp:TableCell>
-                    <asp:TableCell></asp:TableCell>
-                    <asp:TableCell></asp:TableCell>
+                    <asp:TableCell>Region</asp:TableCell>
+                    <asp:TableCell>
+                        <asp:DropDownList ID="ddlRegionNew" runat="server" />
+                    </asp:TableCell>
                 </asp:TableRow>
                 <asp:TableRow>
                     <asp:TableCell>
@@ -46,9 +48,9 @@
                 <asp:TableRow>
                     <asp:TableCell>
                         <asp:Label ID="Label3" runat="server" Text="Activity"></asp:Label>
-                        </asp:TableCell>
+                    </asp:TableCell>
                     <asp:TableCell>
-                        <asp:DropDownList ID="ddlAddProjActivity" runat="server" DataSource=' <%# GetLookupList("Project Activity") %>'
+                        <asp:DropDownList ID="ddlAddProjActivity" runat="server" DataSource=' <%# DAL.Lookup.GetLookupList("Project Activity") %>'
                             DataTextField="LookupValue" DataValueField="LookupValue" />
                     </asp:TableCell>
                     <asp:TableCell></asp:TableCell>
@@ -62,7 +64,7 @@
                     <asp:TableCell>
                         <asp:Label ID="Label6" runat="server" Text="Assigned PM"></asp:Label></asp:TableCell>
                     <asp:TableCell>
-                        <asp:DropDownList ID="ddlAddProjMgr" runat="server" DataSource=' <%# GetUsersByTitle("Project Manager") %>'
+                        <asp:DropDownList ID="ddlAddProjMgr" runat="server" DataSource=' <%# DAL.User.GetUsersByTitle("Project Manager") %>'
                             DataTextField="Name" DataValueField="ID" />
                     </asp:TableCell>
                     <asp:TableCell></asp:TableCell>
@@ -71,9 +73,9 @@
                 </asp:TableRow>
                 <asp:TableRow>
                     <asp:TableCell ColumnSpan="5" HorizontalAlign="Center">
-                        <asp:Button ID="cmdAddProjLead" runat="server" Text="Create Lead/Project" OnClick="cmdAddProjLead_Click" />                        
+                        <asp:Button ID="cmdAddProjLead" runat="server" Text="Create Lead/Project" OnClick="cmdAddProjLead_Click" />
                     </asp:TableCell>
-                </asp:TableRow>               
+                </asp:TableRow>
             </asp:Table>
         </div>
     </div>
@@ -85,8 +87,7 @@
                 <asp:TableCell HorizontalAlign="left">
                     <asp:Label ID="lblProjectLead" runat="server" Text="Select Project:" />
                     <asp:DropDownList ID="ddlProject" runat="server" AutoPostBack="true" OnSelectedIndexChanged="ddlProject_SelectedIndexChanged" />
-                </asp:TableCell>
-                <asp:TableCell HorizontalAlign="Left">
+                </asp:TableCell><asp:TableCell HorizontalAlign="Left">
                     <asp:RadioButtonList RepeatDirection="Horizontal" ID="rdoLeadProject" runat="server"
                         AutoPostBack="true" OnSelectedIndexChanged="rdoLeadProject_SelectedIndexChanged">
                         <asp:ListItem Selected="true" Text="Show Projects" Value="Projects" />
@@ -97,71 +98,68 @@
                         <asp:ListItem Selected="true" Text="Just Active" Value="Active" />
                         <asp:ListItem Text="Show All" Value="All" />
                     </asp:RadioButtonList>
-                </asp:TableCell>
-            </asp:TableRow>
+                </asp:TableCell></asp:TableRow>
         </asp:Table>
-        <asp:Image ID="imgAddRoom" runat="server" class="alert1" ImageUrl="~/images/Add.png"
-            ToolTip="Create a new project or lead" Style="position: absolute; top: 5px; right: 10px;
-            height: 20px; width: 20px; vertical-align: middle;" />
     </div>
     <hr />
+    &nbsp;&nbsp;Reports (click to run):&nbsp;&nbsp;
+    <asp:HyperLink ID="hlActiveReports" NavigateUrl="http://veritas15/reports?/Project Management/Active Projects&rs:Command=Render&rs:Format=PDF"
+        runat="server">Active Projects</asp:HyperLink>&nbsp;&nbsp;|&nbsp;&nbsp;
+    <asp:HyperLink ID="hlAllReports" NavigateUrl="http://veritas15/reports?/Project Management/All Projects&rs:Command=Render&rs:Format=PDF"
+        runat="server">All Projects</asp:HyperLink><hr />
     <asp:Table ID="Table1" runat="server" Width="100%">
         <asp:TableRow>
             <asp:TableCell>
-                <asp:Label ID="lblNumber" runat="server" Text="Project Number"></asp:Label>
-            </asp:TableCell>
-            <asp:TableCell>
-                <asp:TextBox ID="txtProjectNumber" runat="server"></asp:TextBox>
-            </asp:TableCell>
-            <asp:TableCell></asp:TableCell>
-            <asp:TableCell>
-                <asp:Label ID="lblName" runat="server" Text="Project Name"></asp:Label></asp:TableCell>
-            <asp:TableCell>
-                <asp:TextBox ID="txtProjectName" runat="server" Width="250px"></asp:TextBox>
-            </asp:TableCell>
-        </asp:TableRow>
-        <asp:TableRow>
-            <asp:TableCell>
-                <asp:Label ID="lblActivity" runat="server" Text="Project Activity"></asp:Label>
-            </asp:TableCell>
-            <asp:TableCell>
-                <asp:DropDownList ID="ddlProjectActivity" runat="server" DataSource=' <%# GetLookupList("Project Activity") %>'
-                    DataTextField="LookupValue" DataValueField="LookupValue" />
-            </asp:TableCell>
-            <asp:TableCell></asp:TableCell>
-            <asp:TableCell>
-                <asp:Label ID="lblLocation" runat="server" Text="Project Location"></asp:Label></asp:TableCell>
-            <asp:TableCell>
-                <asp:TextBox ID="txtProjectLocation" runat="server"></asp:TextBox>
-            </asp:TableCell>
-        </asp:TableRow>
-        <asp:TableRow>
-            <asp:TableCell>
-            </asp:TableCell>
-            <asp:TableCell>
-                    
-            </asp:TableCell>
-            <asp:TableCell></asp:TableCell>
-            <asp:TableCell></asp:TableCell>
-            <asp:TableCell></asp:TableCell>
-        </asp:TableRow>
-        <asp:TableRow>
-            <asp:TableCell>Assigned PM</asp:TableCell>
-            <asp:TableCell>
-                <asp:DropDownList ID="ddlAssignedPM" runat="server" DataSource=' <%# GetUsersByTitle("Project Manager") %>'
+                <asp:Label ID="Label5" runat="server" Text="Salesperson"></asp:Label>
+            </asp:TableCell><asp:TableCell>
+                <asp:DropDownList ID="ddlSalesPerson" runat="server" DataSource=' <%# DAL.User.GetUsersByTitle("Sales") %>'
                     DataTextField="Name" DataValueField="ID" />
+            </asp:TableCell><asp:TableCell></asp:TableCell><asp:TableCell>
+                <asp:Label ID="lblName" runat="server" Text="Project Name"></asp:Label></asp:TableCell><asp:TableCell>
+                    <asp:TextBox ID="txtProjectName" runat="server" Width="450px"></asp:TextBox>
+                </asp:TableCell></asp:TableRow>
+        <asp:TableRow>
+            <asp:TableCell>PM</asp:TableCell><asp:TableCell>
+                <asp:DropDownList ID="ddlAssignedPM" runat="server" DataSource=' <%# DAL.User.GetUsersByTitle("Project Manager") %>'
+                    DataTextField="Name" DataValueField="ID" />
+            </asp:TableCell><asp:TableCell></asp:TableCell><asp:TableCell>
+                <asp:Label ID="lblNumber" runat="server" Text="Project Number"></asp:Label>
+            </asp:TableCell><asp:TableCell>
+                <asp:TextBox ID="txtProjectNumber" runat="server" Width="100px"></asp:TextBox>
+            </asp:TableCell></asp:TableRow>
+        <asp:TableRow>
+            <asp:TableCell>Design/Draftsman</asp:TableCell><asp:TableCell>
+                <asp:DropDownList ID="ddlDraftsman" runat="server" DataSource=' <%# DAL.User.GetUsersByTitle("Draftsman") %>'
+                    DataTextField="Name" DataValueField="ID" />
+            </asp:TableCell><asp:TableCell></asp:TableCell><asp:TableCell>Hospital / Clinic Name</asp:TableCell><asp:TableCell>
+                <asp:TextBox ID="txtHospitalClinic" runat="server" Width="200px" /></asp:TableCell></asp:TableRow>
+        <asp:TableRow>
+            <asp:TableCell>Engineering Consultant</asp:TableCell><asp:TableCell>
+                <asp:DropDownList ID="ddlEngineeringConsultant" runat="server" DataSource=' <%# DAL.Lookup.GetLookupList("EngineeringConsultants") %>'
+                    DataTextField="LookupValue" DataValueField="LookupValue" />
+            </asp:TableCell><asp:TableCell></asp:TableCell><asp:TableCell>
+                <asp:Label ID="lblActivity" runat="server" Text="Project Status"></asp:Label></asp:TableCell><asp:TableCell>
+                    <asp:DropDownList ID="ddlProjectActivity" runat="server" DataSource=' <%# DAL.Lookup.GetLookupList("Project Activity") %>'
+                        DataTextField="LookupValue" DataValueField="LookupValue" />
+                </asp:TableCell></asp:TableRow>
+        <asp:TableRow>
+            <asp:TableCell>Physicist</asp:TableCell><asp:TableCell>
+                <asp:DropDownList ID="ddlPhysicist" runat="server" DataSource=' <%# DAL.User.GetUsersByTitle("Physicist") %>'
+                    DataTextField="Name" DataValueField="ID" />
+            </asp:TableCell><asp:TableCell></asp:TableCell><asp:TableCell>Region</asp:TableCell><asp:TableCell>
+                <asp:DropDownList ID="ddlProspectRegion" runat="server" />
             </asp:TableCell>
-            <asp:TableCell></asp:TableCell>
-            <asp:TableCell></asp:TableCell>
-            <asp:TableCell></asp:TableCell>
         </asp:TableRow>
+        <asp:TableRow>
+            <asp:TableCell ColumnSpan="5"></asp:TableCell></asp:TableRow>
         <asp:TableRow>
             <asp:TableCell ColumnSpan="5" HorizontalAlign="Center">
                 <asp:Button ID="cmdSave" runat="server" Text="Update Project" OnClick="cmdSaveLeadProj_Click" />
                 <asp:Button ID="cmdDelete" runat="server" Text="Delete Project" OnClick="cmdDeleteLeadProj_Click" />
-            </asp:TableCell>
-        </asp:TableRow>
+            </asp:TableCell></asp:TableRow>
         <asp:TableRow>
             <asp:TableCell ColumnSpan="5">
-                <asp:Label ID="lblRecordStatus" runat="server" Style="font-size: xx-small;" Text="" />
-            </asp:TableCell></asp:TableRow></asp:Table></asp:Content>
+                <asp:Label ID="lblRecordStatus" runat="server" Style="font-size: x-small;" Text="" />
+            </asp:TableCell></asp:TableRow>
+    </asp:Table>
+</asp:Content>

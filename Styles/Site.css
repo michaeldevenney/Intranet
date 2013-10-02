@@ -139,6 +139,29 @@ first child of the left and right table columns */
 }
 
 
+.modalBackground {
+	background-color:Gray;
+	filter:alpha(opacity=70);
+	opacity:0.7;
+}
+
+.ModalWindow
+{
+  border: solid 1px #c0c0c0;
+  background:#f0f0f0;
+  padding: 10px 10px 10px 10px;
+  color:Black;  
+}
+
+.ModalWindowTable
+{
+	border-width: 1px;	
+	border-style: solid;
+	border-color: black;
+	border-collapse: collapse;
+	padding: 2px;
+}
+
 /* TAB MENU   
 ----------------------------------------------------------*/
 
@@ -295,8 +318,8 @@ div.accountInfo
 
 div.datarow
 {
-    height:26px; 
-    padding:0 0 0 10px;   
+    clear: none;   
+    float: left;
 }
 
 div.extdatarow
@@ -396,6 +419,58 @@ tr.heading
     text-align:center;
 }
 
+div.links
+{
+    border: 1px solid #000000;
+    font-family: Calibri;
+    background-color: #808080;
+    font-size: 14px;
+    float: right;
+    width: 200px;
+    margin-right: 5px;
+    padding:10px 10px 10px 10px;
+    clear: left;   
+}
+
+div.test
+{
+    float:left;
+}
+
+div.links a
+{
+    color: #0039A6;
+    font-family: calibri;
+    font-size: 14px;
+    text-indent: 5px;
+    padding-left: 10px;
+    font-style: normal;
+    font-variant: normal;
+    text-transform: none;
+}
+
+div.links a:hover
+{
+    color: #ffffff;
+    font-family: calibri;
+    font-size: 14px;
+    font-weight:bold;
+}
+
+div.linkhead
+{
+    font-size: 24px;
+    color: #ffffff;
+    padding-bottom: 5px;    
+}
+
+div.pageContent
+{
+    background-color: Silver; 
+    margin-left: auto; 
+    margin-right: auto; 
+    width: 1200px;
+}
 
  /*Styles for fuzz overlay & message box*/  
  #fuzz1{ position:absolute; top:0; left:0; width:100%; z-index:100; background: url('../images/dim.png'); display:none; text-align:left; }  
@@ -407,8 +482,8 @@ tr.heading
       /*The "X" in the upper right corner of msgbox*/  
       .close1{ float: right; height: 20px; width: 20px; vertical-align:middle; }  
    
-   /*New Room Entry Form, positioned in dead center of browser*/  
-   .newLeadProj{ position:absolute; width:750px; height:190px; z-index:200; border:1px solid #222; background: #FFF; top: 50%; left: 50%; margin-top: -80px; margin-left: -375px; }  
+   /*New Project form on Estimating Page*/
+   .newLeadProj{ position:absolute; width:750px; height:200px; z-index:200; border:1px solid #222; background: #FFF; top: 50%; left: 50%; margin-top: -100px; margin-left: -375px; }  
       .newLeadProj img { border:none; margin-right:5px; }
          
    .newAddr{ position:absolute; width:300px; height:290px; z-index:200; border:1px solid #222; background: #FFF; top: 20%; left: 50%; margin-top: -100px; margin-left: -150px; }

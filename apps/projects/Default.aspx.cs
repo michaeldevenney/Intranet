@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Configuration;
+using System.IO;
 using System.Web.UI;
+using System.Web.UI.WebControls;
 using DAL;
 using Shared;
-using System.Web.UI.WebControls;
-using System.Net.Mail;
 
 public partial class apps_projects_Default : System.Web.UI.Page
 {
@@ -18,7 +19,7 @@ public partial class apps_projects_Default : System.Web.UI.Page
             lblHeading = (Label)Master.FindControl("lblPageHeading");
             lblHeading.Text = "Veritas - Project Management - Projects";
 
-            ddlProject.DataSource = GetActiveProjects();
+            ddlProject.DataSource = Project.GetProjectsByStatus(Project.ProjectStatus.Active); 
             ddlProject.DataValueField = "ID";
             ddlProject.DataTextField = "DisplayName";
 
@@ -28,6 +29,8 @@ public partial class apps_projects_Default : System.Web.UI.Page
 
             ddlProject.Items[0].Selected = true;
             LoadForm(int.Parse(ddlProject.Items[0].Value));
+
+            BindRegionsDropdowns();
         }
         else
         {
@@ -38,7 +41,7 @@ public partial class apps_projects_Default : System.Web.UI.Page
             }
         }
 
-        currentUser = Data.GetUserFromLogin(Page.User.Identity.Name);
+        currentUser = DAL.User.GetUserFromLogin(Page.User.Identity.Name);
     }
 
     private void UpdateLabels(string inLeadProject)
@@ -56,25 +59,7 @@ public partial class apps_projects_Default : System.Web.UI.Page
         }
 
     }
-
-    #region DATA ACCESS
-
-    public UserCollection GetUsersByTitle(string inTitle)
-    {
-        return Data.GetUsersByTitle(inTitle);
-    }
-
-    public LookupCollection GetLookupList(string inListName)
-    {
-        return Data.GetLookupList(inListName);
-    }
-
-    public ProjectCollection GetActiveProjects()
-    {
-        return Data.GetProjectsByStatus(Data.ProjectStatus.Active);
-    }
-
-    #endregion
+       
 
     #region CONTROL EVENTS
     
@@ -142,11 +127,11 @@ public partial class apps_projects_Default : System.Web.UI.Page
         {
             if (rdoActiveAll.SelectedValue == "Active")
             {
-                ddlProject.DataSource = Data.GetProjectsByStatus(Data.ProjectStatus.Active);
+                ddlProject.DataSource = Project.GetProjectsByStatus(Project.ProjectStatus.Active);
             }
             else
             {
-                ddlProject.DataSource = Data.GetAllProjects();
+                ddlProject.DataSource = Project.GetAllProjects();
             }
 
             ddlProject.DataValueField = "ID";
@@ -157,11 +142,11 @@ public partial class apps_projects_Default : System.Web.UI.Page
         {
             if (rdoActiveAll.SelectedValue == "Active")
             {
-                ddlProject.DataSource = Data.GetLeadsByStatus(Data.ProjectStatus.Active);
+                ddlProject.DataSource = Project.GetLeadsByStatus(Project.ProjectStatus.Active);
             }
             else
             {
-                ddlProject.DataSource = Data.GetAllLeads();
+                ddlProject.DataSource = Project.GetAllLeads();
             }
 
             
@@ -194,17 +179,23 @@ public partial class apps_projects_Default : System.Web.UI.Page
         string status = "Record created on " + createdDate + " by " + currProj.CreatedBy + ".\r\nLast updated on " +
             updatedDate + " by " + currProj.UpdatedBy;
 
-        txtProjectLocation.Text = currProj.Location;
+        ddlDraftsman.SelectedValue = currProj.DesignDraftsmanID.ToString();
         txtProjectName.Text = currProj.ProjectName;
         txtProjectNumber.Text = currProj.ProjectNumber;
+        txtHospitalClinic.Text = currProj.HospitalClinicName;
         ddlAssignedPM.SelectedValue = currProj.PMUserID.ToString();
         ddlProjectActivity.SelectedValue = currProj.ProjectActivity;
+        ddlEngineeringConsultant.SelectedValue = currProj.EngineeringConsultant;
         lblRecordStatus.Text = status;
+        ddlSalesPerson.SelectedValue = currProj.SalespersonID.ToString();
+        ddlProspectRegion.SelectedValue = currProj.Region;
+        ddlPhysicist.SelectedValue = currProj.PhysicistID.ToString();
+
     }
 
     private void SaveProject()
     {
-        currProj.Location = txtProjectLocation.Text;
+        currProj.DesignDraftsmanID = int.Parse(ddlDraftsman.SelectedItem.Value);
         currProj.ProjectName = txtProjectName.Text;
         currProj.ProjectNumber = txtProjectNumber.Text;
         currProj.PMUserID = int.Parse(ddlAssignedPM.SelectedItem.Value);
@@ -212,6 +203,11 @@ public partial class apps_projects_Default : System.Web.UI.Page
         currProj.ProjectActivity = ddlProjectActivity.SelectedItem.Text;
         currProj.Updated = DateTime.Now;
         currProj.UpdatedBy = Utils.GetFormattedUserNameInternal(User.Identity.Name);
+        currProj.HospitalClinicName = txtHospitalClinic.Text;
+        currProj.EngineeringConsultant = ddlEngineeringConsultant.SelectedItem.Value;
+        currProj.SalespersonID = int.Parse(ddlSalesPerson.SelectedItem.Value);
+        currProj.Region = ddlProspectRegion.SelectedItem.Value;
+        currProj.PhysicistID = int.Parse(ddlPhysicist.SelectedItem.Value);
 
         currProj.Save();
 
@@ -224,11 +220,16 @@ public partial class apps_projects_Default : System.Web.UI.Page
 
         lblRecordStatus.Text = status;
 
-        User currentUser = Data.GetUserFromLogin(Page.User.Identity.Name);
+        User currentUser = DAL.User.GetUserFromLogin(Page.User.Identity.Name);
 
         ClearFields();
 
         //SendEmail(currProj, "Updated");
+    }
+
+    private void ClearFields()
+    {
+        
     }
 
     private void CreateProject()
@@ -246,6 +247,7 @@ public partial class apps_projects_Default : System.Web.UI.Page
         proj.CreatedBy = Utils.GetFormattedUserNameInternal(User.Identity.Name);
         proj.Updated = DateTime.Now;
         proj.UpdatedBy = Utils.GetFormattedUserNameInternal(User.Identity.Name);
+        proj.Region = ddlRegionNew.SelectedItem.Text;
 
         proj.Save();
 
@@ -253,12 +255,12 @@ public partial class apps_projects_Default : System.Web.UI.Page
 
         if (ddlProjectLead.SelectedItem.Text == "Project")
         {
-            ddlProject.DataSource = Data.GetAllProjects();
+            ddlProject.DataSource = Project.GetAllProjects();
             lblProjectLead.Text = "Select Project: ";
         }
         else
         {
-            ddlProject.DataSource = Data.GetAllLeads();
+            ddlProject.DataSource = Project.GetAllLeads();
             lblProjectLead.Text = "Select Lead: ";
         }
 
@@ -273,12 +275,28 @@ public partial class apps_projects_Default : System.Web.UI.Page
 
     private void DeleteProject()
     {        
-        Project currentProject = Data.GetProjectByID(int.Parse(ddlProject.SelectedItem.Value));   
+        Project currentProject = Project.GetProjectByID(int.Parse(ddlProject.SelectedItem.Value));   
         Project.Delete(ddlProject.SelectedItem.Value);
 
         SendEmail(currentProject, "Deleted");
 
         FilterLeadProjectDDL();
+    }
+
+    private void BindRegionsDropdowns()
+    {
+        var path = ConfigurationManager.AppSettings["ProspectsFolderPath"];
+        var regions = Directory.GetDirectories(path, "*", SearchOption.TopDirectoryOnly);
+
+        for (int i = regions.Length - 1; i > -1; i--)
+        {
+            regions[i] = regions[i].Substring(75);
+        }
+        ddlProspectRegion.DataSource = regions;
+        ddlProspectRegion.DataBind();
+
+        ddlRegionNew.DataSource = regions;
+        ddlRegionNew.DataBind();
     }
 
     #endregion
